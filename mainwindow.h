@@ -34,6 +34,15 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    QAction *saveJsonAction();
+
+    QMenu *fileMenu;
+
+    QMenuBar *menuBar;
+
+    QStatusBar *statusBar;
+
+public slots:
+    void saveJson();
 };
 #endif // MAINWINDOW_H

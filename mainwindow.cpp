@@ -17,17 +17,49 @@
  */
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+
+#include <QVBoxLayout>
+#include <QAction>
+#include <QMenuBar>
+#include <QMenu>
+#include <QStatusBar>
+
+#include "./mapeditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+
+    auto layout = new QVBoxLayout();
+
+    // editor view
+    auto editor = new MapEditor(this);
+    layout->addWidget(editor);
+
+    setLayout(layout);
+
+    // menubar actions
+    QAction *saveJsonAction = new QAction(tr("&Save to json"), this);
+    saveJsonAction->setStatusTip("Export the map to a json file");
+    connect(saveJsonAction, SIGNAL(triggered()), this, SLOT(saveJson()));
+
+    // menubar
+    menuBar = new QMenuBar(this);
+
+    fileMenu = menuBar->addMenu(tr("&File"));
+    fileMenu->addAction(saveJsonAction);
+
+    // status bar
+    statusBar = new QStatusBar(this);
+    setStatusBar(statusBar);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+}
+
+void MainWindow::saveJson()
+{
+
 }
 
