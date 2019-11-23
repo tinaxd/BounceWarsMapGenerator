@@ -24,6 +24,7 @@
 #include <QMenu>
 #include <QStatusBar>
 #include <QFileDialog>
+#include <QWindow>
 
 #include "./mapeditor.h"
 #include "./jsonmaptool.h"
@@ -31,14 +32,18 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
+    auto *central = new QWidget(this);
     auto layout = new QVBoxLayout();
 
     // editor view
     editor = new MapEditor(this);
     layout->addWidget(editor);
 
-    setLayout(layout);
+    // toolbar
+    penChooser = new PenChooser(this, editor);
+    layout->addWidget(penChooser);
+
+    central->setLayout(layout);
 
     // menubar actions
     QAction *saveJsonAction = new QAction(tr("&Save to json"), this);
@@ -54,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent)
     // status bar
     statusBar = new QStatusBar(this);
     setStatusBar(statusBar);
+
+    setCentralWidget(central);
 }
 
 MainWindow::~MainWindow()
@@ -74,5 +81,7 @@ void MainWindow::saveJson()
     file.write(jsonDump.c_str());
 
     statusBar->showMessage("Wrote json to file");
+
+    file.close();
 }
 

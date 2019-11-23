@@ -36,12 +36,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mapeditor.cpp \
-    ext/json.hpp
+    ext/json.hpp \
+    penchooser.cpp
 
 HEADERS += \
     jsonmaptool.h \
     mainwindow.h \
     mapeditor.h \
+    penchooser.h \
     tiletype.h
 
 FORMS +=

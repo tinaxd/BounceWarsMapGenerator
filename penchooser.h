@@ -14,41 +14,32 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+*/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PENCHOOSER_H
+#define PENCHOOSER_H
 
-#include <QMainWindow>
+#include <QWidget>
+#include <QGridLayout>
 
 #include "./mapeditor.h"
-#include "./penchooser.h"
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+class PenChooser : public QWidget
 {
     Q_OBJECT
 
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private:
-    QAction *saveJsonAction();
-
-    QMenu *fileMenu;
-
-    QMenuBar *menuBar;
-
-    QStatusBar *statusBar;
-
     MapEditor *editor;
-    PenChooser *penChooser;
+
+    QGridLayout *layout;
+
+public:
+    explicit PenChooser(QWidget *parent, MapEditor *editor);
+
+    void setMapEditor(MapEditor *editor);
+
+signals:
 
 public slots:
-    void saveJson();
 };
-#endif // MAINWINDOW_H
+
+#endif // PENCHOOSER_H

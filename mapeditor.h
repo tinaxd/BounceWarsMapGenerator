@@ -57,6 +57,11 @@ public:
 
     QColor color_tile_grass;
     QColor color_tile_sea;
+    QColor color_tile_sand;
+    QColor color_tile_brick;
+    QColor color_tile_clay;
+    QColor color_tile_lava;
+    QColor color_tile_rock;
 
     void setTilePen(TileType tileType);
     void setBuildingPen(BuildingType buildingType);

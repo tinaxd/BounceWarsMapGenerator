@@ -37,10 +37,15 @@ MapEditor::MapEditor(QWidget *parent) : QWidget(parent)
 
     color_tile_grass = Qt::green;
     color_tile_sea = QColor::fromRgb(90, 172, 246);
+    color_tile_sand = QColor::fromRgb(223, 210, 185);
+    color_tile_brick = QColor::fromRgb(255, 137, 0);
+    color_tile_clay = QColor::fromRgb(118, 114, 109);
+    color_tile_lava = Qt::red;
+    color_tile_rock = Qt::black;
 
     const int linecount = tiles_height / 2;
-    const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 1000;
-    const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 100;
+    const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 100;
+    const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 10;
     setMinimumSize(QSize(int(request_width), int(request_height)));
 
     for (int i = 0; i < tiles_height; i++) {
@@ -135,16 +140,31 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
     const MapTile& tile = mapData.at(size_t(tileIndex));
     const QPointF  cord0 = getCoordinateOfTileIndex(tileIndex);
 
+    QColor *color;
     switch (tile.tile) {
     case TileType::grass:
-        painter.setBrush(QBrush(color_tile_grass));
+        color = &color_tile_grass;
         break;
     case TileType::sea:
-        painter.setBrush(QBrush(color_tile_sea));
+        color = &color_tile_sea;
         break;
-    default:
-        painter.setBrush(QBrush(Qt::transparent));
+    case TileType::sand:
+        color = &color_tile_sand;
+        break;
+    case TileType::brick:
+        color = &color_tile_brick;
+        break;
+    case TileType::clay:
+        color = &color_tile_clay;
+        break;
+    case TileType::lava:
+        color = &color_tile_lava;
+        break;
+    case TileType::rock:
+        color = &color_tile_rock;
+        break;
     }
+    painter.setBrush(QBrush{*color});
 
     const QPointF cord2 = QPointF{cord0.x() + 2 * std::cos(pi / 6) * edge_length, cord0.y()};
     const QPointF cord5 = QPointF{cord0.x(), cord0.y() + edge_length};
