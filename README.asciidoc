@@ -1,2 +1,12 @@
 Map generator for BounceWars
 ----------------------------
+GUI map designer for BounceWars.
+
+Libraries
+^^^^^^^^^
+* Qt
+* json (https://github.com/nlohmann/json[github])
+
+License
+^^^^^^^
+GPLv3
