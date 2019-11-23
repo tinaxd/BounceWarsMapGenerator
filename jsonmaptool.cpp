@@ -33,8 +33,8 @@ std::string jsonmaptool::mapToJson(const std::vector<MapTile> &mapData, int widt
     vector<vector<map<string, int>>> top;
     for (int i = 0; i < height; i++) {
         vector<map<string, int>> horizontal;
-        for (int j = 0; j < width; j++) {
-            const MapTile &data = mapData.at(size_t(i * height + j));
+        for (int k = 0; k < width; k++) {
+            const MapTile &data = mapData.at(size_t(i * width + k));
             map<string, int> tile;
 
             tile.insert(make_pair("type", int(data.tile)));
