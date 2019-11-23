@@ -1,3 +1,21 @@
+/*
+    BounceWars map generator
+    Copyright (C) 2019 tinaxd
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "mapeditor.h"
 
 #include <QPainter>
@@ -16,6 +34,9 @@ MapEditor::MapEditor(QWidget *parent) : QWidget(parent)
     edge_length = 30;
     translation_x = 50;
     translation_y = 50;
+
+    color_tile_grass = Qt::green;
+    color_tile_sea = QColor::fromRgb(90, 172, 246);
 
     const int linecount = tiles_height / 2;
     const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 1000;
@@ -116,10 +137,10 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
 
     switch (tile.tile) {
     case TileType::grass:
-        painter.setBrush(QBrush(Qt::green));
+        painter.setBrush(QBrush(color_tile_grass));
         break;
     case TileType::sea:
-        painter.setBrush(QBrush(QColor(90, 172, 246)));
+        painter.setBrush(QBrush(color_tile_sea));
         break;
     default:
         painter.setBrush(QBrush(Qt::transparent));
@@ -175,6 +196,52 @@ void MapEditor::mousePressEvent(QMouseEvent *event)
     std::cout << tileIndex << std::endl;
     if (tileIndex == -1)
         return;
-    mapData.at(int(tileIndex)) = TileType::grass;
+
+    MapTile &editing = mapData.at(size_t(tileIndex));
+    switch (penType) {
+    case 0: // TilePen
+        editing = MapTile{tilePen, editing.building, editing.item};
+        break;
+    case 1: // Building Pen
+        editing = MapTile{editing.tile, buildingPen, editing.item};
+        break;
+    case 2:
+        editing = MapTile{editing.tile, editing.building, itemPen};
+        break;
+    }
+
     repaint();
+}
+
+void MapEditor::setTilePen(TileType tileType)
+{
+    tilePen = tileType;
+    penType = 0;
+}
+
+void MapEditor::setBuildingPen(BuildingType buildingType)
+{
+    buildingPen = buildingType;
+    penType = 1;
+}
+
+void MapEditor::setItemPen(ItemType itemType)
+{
+    itemPen = itemType;
+    penType = 2;
+}
+
+const std::vector<MapTile>& MapEditor::getMapData() const
+{
+    return mapData;
+}
+
+int MapEditor::get_tiles_width() const
+{
+    return tiles_width;
+}
+
+int MapEditor::get_tiles_height() const
+{
+    return tiles_height;
 }

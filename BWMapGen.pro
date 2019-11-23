@@ -35,7 +35,8 @@ SOURCES += \
     jsonmaptool.cpp \
     main.cpp \
     mainwindow.cpp \
-    mapeditor.cpp
+    mapeditor.cpp \
+    ext/json.hpp
 
 HEADERS += \
     jsonmaptool.h \

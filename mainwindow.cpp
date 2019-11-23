@@ -23,8 +23,10 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QStatusBar>
+#include <QFileDialog>
 
 #include "./mapeditor.h"
+#include "./jsonmaptool.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     auto layout = new QVBoxLayout();
 
     // editor view
-    auto editor = new MapEditor(this);
+    editor = new MapEditor(this);
     layout->addWidget(editor);
 
     setLayout(layout);
@@ -60,6 +62,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::saveJson()
 {
+    QString saveJsonPath = QFileDialog::getSaveFileName(this, tr("Save JSON"), QString(), tr("JSON (*.json, *.txt)"));
 
+    auto mapData = editor->getMapData();
+    std::string jsonDump = jsonmaptool::mapToJson(mapData, editor->get_tiles_width(), editor->get_tiles_height());
+
+    QFile file(saveJsonPath);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
+        return;
+
+    file.write(jsonDump.c_str());
+
+    statusBar->showMessage("Wrote json to file");
 }
 

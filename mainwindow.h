@@ -21,6 +21,8 @@
 
 #include <QMainWindow>
 
+#include "./mapeditor.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -41,6 +43,8 @@ private:
     QMenuBar *menuBar;
 
     QStatusBar *statusBar;
+
+    MapEditor *editor;
 
 public slots:
     void saveJson();
