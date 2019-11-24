@@ -82,7 +82,7 @@ PenChooser::PenChooser(QWidget *parent, MapEditor *editor) : QWidget(parent), ed
 
     // building pen chooser
     QLabel *buildingLabel = new QLabel(tr("Buildings"), this);
-    layout->addWidget(penLabel, 3, 0);
+    layout->addWidget(buildingLabel, 3, 0);
 
     auto pen_b_nothing = new QPushButton(this);
     pen_b_nothing->setText(tr("No Building"));
