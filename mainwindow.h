@@ -50,5 +50,6 @@ private:
 
 public slots:
     void saveJson();
+    void readJson();
 };
 #endif // MAINWINDOW_H

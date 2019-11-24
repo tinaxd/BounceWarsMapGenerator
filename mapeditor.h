@@ -50,6 +50,9 @@ class MapEditor : public QWidget
     BuildingType buildingPen = BuildingType::nothing;
     ItemType itemPen = ItemType::nothing;
 
+    void updateSizeRequest();
+    void updateHexCords();
+
 public:
     explicit MapEditor(QWidget *parent = nullptr);
 
@@ -67,10 +70,14 @@ public:
     void setBuildingPen(BuildingType buildingType);
     void setItemPen(ItemType itemType);
 
-    const std::vector<MapTile>& getMapData() const;
+    const std::vector<MapTile> &getMapData() const;
+    void setMapData(std::vector<MapTile> &&mapData);
 
-    int get_tiles_width() const;
-    int get_tiles_height() const;
+    int getTilesWidth() const;
+    int getTilesHeight() const;
+
+    void setTilesWidth(int width);
+    void setTilesHeight(int height);
 
 protected:
     void paintEvent(QPaintEvent *) override;

@@ -21,6 +21,8 @@
 #include "ext/json.hpp"
 using Json = nlohmann::json;
 
+#include <iostream>
+
 std::string jsonmaptool::mapToJson(const std::vector<MapTile> &mapData, int width, int height)
 {
     using namespace std;
@@ -31,7 +33,7 @@ std::string jsonmaptool::mapToJson(const std::vector<MapTile> &mapData, int widt
     j["mapType"] = 3;
 
     vector<vector<map<string, int>>> top;
-    for (int i = 0; i < height; i++) {
+    for (int i = height - 1; i != 0; i++) {
         vector<map<string, int>> horizontal;
         for (int k = 0; k < width; k++) {
             const MapTile &data = mapData.at(size_t(i * width + k));
@@ -53,4 +55,47 @@ std::string jsonmaptool::mapToJson(const std::vector<MapTile> &mapData, int widt
     j["mapData"] = top;
 
     return j.dump();
+}
+
+std::vector<MapTile> jsonmaptool::jsonToMap(std::string jsonData, int *width, int *height)
+{
+    using namespace std;
+
+    size_t jWidth, jHeight;
+    std::vector<MapTile> ret;
+
+    try {
+        Json json{Json::parse(jsonData)};
+        vector<vector<map<string, int>>> top = json["mapData"];
+        jHeight = top.size();
+        if (jHeight == 0)
+            return std::vector<MapTile>();
+        jWidth = top.at(0).size();
+        if (jWidth == 0)
+            return std::vector<MapTile>();
+
+        cout << jHeight << endl;
+        for (size_t i = jHeight; i --> 0; ) {
+            for (size_t j = 0; j < jWidth; j++) {
+
+                map<string, int> tile = top[i][j];
+
+                MapTile mt{TileType(int(tile.at("type")))};
+
+                if (auto building = tile.find("buildingType"); building != tile.end()) {
+                    mt.building = BuildingType(int(building->second));
+                }
+
+                ret.push_back(mt);
+                // TODO item support
+            }
+        }
+
+        *width  = int(jWidth);
+        *height = int(jHeight);
+    } catch (Json::type_error &e) {
+        cerr << e.what() << endl;
+    }
+
+    return ret;
 }
