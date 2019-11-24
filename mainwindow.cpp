@@ -25,6 +25,7 @@
 #include <QStatusBar>
 #include <QFileDialog>
 #include <QWindow>
+#include <QTextStream>
 
 #include "./mapeditor.h"
 #include "./jsonmaptool.h"
@@ -50,11 +51,16 @@ MainWindow::MainWindow(QWidget *parent)
     saveJsonAction->setStatusTip("Export the map to a json file");
     connect(saveJsonAction, SIGNAL(triggered()), this, SLOT(saveJson()));
 
+    QAction *readJsonAction = new QAction(tr("&Read from json"), this);
+    readJsonAction->setStatusTip("Import map from json");
+    connect(readJsonAction, SIGNAL(triggered()), this, SLOT(readJson()));
+
     // menubar
     menuBar = new QMenuBar(this);
 
     fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(saveJsonAction);
+    fileMenu->addAction(readJsonAction);
 
     // status bar
     statusBar = new QStatusBar(this);
@@ -69,10 +75,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::saveJson()
 {
-    QString saveJsonPath = QFileDialog::getSaveFileName(this, tr("Save JSON"), QString(), tr("JSON (*.json, *.txt)"));
+    QString saveJsonPath = QFileDialog::getSaveFileName(this, tr("Save JSON"), QString(), tr("JSON (*.json *.txt)"));
+    if (saveJsonPath == QString())
+        return;
 
     auto mapData = editor->getMapData();
-    std::string jsonDump = jsonmaptool::mapToJson(mapData, editor->get_tiles_width(), editor->get_tiles_height());
+    std::string jsonDump = jsonmaptool::mapToJson(mapData, editor->getTilesWidth(), editor->getTilesHeight());
 
     QFile file(saveJsonPath);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
@@ -85,3 +93,26 @@ void MainWindow::saveJson()
     file.close();
 }
 
+void MainWindow::readJson()
+{
+    QString readJsonPath = QFileDialog::getOpenFileName(this, tr("Read JSON"), QString(), tr("JSON (*.json *.txt"));
+    if (readJsonPath == QString())
+        return;
+    QFile file(readJsonPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream stream(&file);
+    std::string jsonData;
+    {
+        QString tmp = stream.readAll();
+        jsonData = tmp.toUtf8().constData();
+    }
+
+    int width, height;
+    std::vector<MapTile> mapData = jsonmaptool::jsonToMap(jsonData, &width, &height);
+
+    editor->setTilesWidth(width);
+    editor->setTilesHeight(height);
+    editor->setMapData(std::move(mapData));
+}

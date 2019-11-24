@@ -46,18 +46,12 @@ MapEditor::MapEditor(QWidget *parent) : QWidget(parent)
     color_building_tree = QColor::fromRgb(13, 37, 27);
     color_building_stone = QColor::fromRgb(130, 130, 132);
 
-    const int linecount = tiles_height / 2;
-    const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 100;
-    const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 10;
-    setMinimumSize(QSize(int(request_width), int(request_height)));
+    updateSizeRequest();
+  
+    updateHexCords();
 
-    for (int i = 0; i < tiles_height; i++) {
-        const double y_start = translation_y + (1 + std::sin(pi / 6)) * edge_length * i + edge_length / 2.0;
-        const double x_start = translation_x + (i % 2 == 0 ? 1 : 2) * std::cos(pi / 6) * edge_length;
-        for (int j = 0; j < tiles_width; j++) {
-            hexCords.push_back(QPointF(x_start + 2 * std::cos(pi / 6) * edge_length * j, y_start));
-            mapData.push_back(MapTile(TileType::sea));
-        }
+    for (int i = 0; i < totalTiles(); i++) {
+        mapData.emplace_back(MapTile{TileType::grass});
     }
 }
 
@@ -289,12 +283,58 @@ const std::vector<MapTile>& MapEditor::getMapData() const
     return mapData;
 }
 
-int MapEditor::get_tiles_width() const
+int MapEditor::getTilesWidth() const
 {
     return tiles_width;
 }
 
-int MapEditor::get_tiles_height() const
+int MapEditor::getTilesHeight() const
 {
     return tiles_height;
+}
+
+void MapEditor::setTilesWidth(int width)
+{
+    this->tiles_width = width;
+    updateSizeRequest();
+    updateHexCords();
+    // TODO extend or shrink previous mapData
+}
+
+void MapEditor::setTilesHeight(int height)
+{
+    this->tiles_height = height;
+    updateSizeRequest();
+    updateHexCords();
+    // TODO extend or shrink previous mapData
+}
+
+void MapEditor::setMapData(std::vector<MapTile> &&mapData)
+{
+    if (size_t(tiles_height * tiles_width) != mapData.size()) {
+        std::cerr << "Corrupted map data" << std::endl;
+        return;
+    }
+
+    this->mapData = std::move(mapData);
+}
+
+void MapEditor::updateSizeRequest()
+{
+    const int linecount = tiles_height / 2;
+    const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 100;
+    const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 10;
+    setMinimumSize(QSize(int(request_width), int(request_height)));
+}
+
+void MapEditor::updateHexCords()
+{
+    hexCords.clear();
+    for (int i = 0; i < tiles_height; i++) {
+        const double y_start = translation_y + (1 + std::sin(pi / 6)) * edge_length * i + edge_length / 2.0;
+        const double x_start = translation_x + (i % 2 == 0 ? 1 : 2) * std::cos(pi / 6) * edge_length;
+        for (int j = 0; j < tiles_width; j++) {
+            hexCords.push_back(QPointF(x_start + 2 * std::cos(pi / 6) * edge_length * j, y_start));
+        }
+    }
 }
