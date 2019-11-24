@@ -43,6 +43,8 @@ MapEditor::MapEditor(QWidget *parent) : QWidget(parent)
     color_tile_lava = Qt::red;
     color_tile_rock = Qt::black;
 
+    color_building_tree = Qt::
+
     const int linecount = tiles_height / 2;
     const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 100;
     const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 10;
@@ -140,6 +142,7 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
     const MapTile& tile = mapData.at(size_t(tileIndex));
     const QPointF  cord0 = getCoordinateOfTileIndex(tileIndex);
 
+    // Draw tile
     QColor *color;
     switch (tile.tile) {
     case TileType::grass:
@@ -177,6 +180,10 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
     };
 
     painter.drawPolygon(points, 6);
+
+
+    // Draw building
+
 }
 
 int MapEditor::totalTiles() const
