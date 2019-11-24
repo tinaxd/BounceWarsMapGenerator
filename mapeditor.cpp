@@ -43,6 +43,9 @@ MapEditor::MapEditor(QWidget *parent) : QWidget(parent)
     color_tile_lava = Qt::red;
     color_tile_rock = Qt::black;
 
+    color_building_tree = QColor::fromRgb(13, 37, 27);
+    color_building_stone = QColor::fromRgb(130, 130, 132);
+
     const int linecount = tiles_height / 2;
     const double request_width = tiles_width * 2 * std::cos(pi / 6) * edge_length + 100;
     const double request_height = (linecount + std::sin(pi / 6)) * edge_length * linecount + 10;
@@ -140,6 +143,7 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
     const MapTile& tile = mapData.at(size_t(tileIndex));
     const QPointF  cord0 = getCoordinateOfTileIndex(tileIndex);
 
+    // Draw tile
     QColor *color;
     switch (tile.tile) {
     case TileType::grass:
@@ -177,6 +181,35 @@ void MapEditor::drawTileIndex(QPainter& painter, int tileIndex)
     };
 
     painter.drawPolygon(points, 6);
+
+
+    // Draw building
+    {
+        QColor *bColor;
+        switch (tile.building) {
+        case BuildingType::nothing:
+            goto DRAWEND;
+        case BuildingType::forest:
+            bColor = &color_building_tree;
+            break;
+        case BuildingType::stones1:
+        case BuildingType::stones2:
+        case BuildingType::stones3:
+            bColor = &color_building_stone;
+            break;
+        }
+
+        const QPointF center = (cord0 + cord3) / 2;
+        const double radius = edge_length * std::sin(pi / 3) / 2;
+        const QRectF rect = QRectF{center - QPointF{radius, radius}, QSizeF{2 * radius, 2 * radius}};
+
+        painter.setBrush(QBrush{*bColor});
+        painter.drawEllipse(rect);
+    }
+
+    DRAWEND:
+
+    return;
 }
 
 int MapEditor::totalTiles() const
