@@ -80,6 +80,45 @@ PenChooser::PenChooser(QWidget *parent, MapEditor *editor) : QWidget(parent), ed
     });
     layout->addWidget(pen_rock, 2, 1);
 
+    // building pen chooser
+    QLabel *buildingLabel = new QLabel(tr("Buildings"), this);
+    layout->addWidget(penLabel, 3, 0);
+
+    auto pen_b_nothing = new QPushButton(this);
+    pen_b_nothing->setText(tr("No Building"));
+    connect(pen_b_nothing, &QPushButton::released, [=]{
+        editor->setBuildingPen(BuildingType::nothing);
+    });
+    layout->addWidget(pen_b_nothing, 3, 1);
+
+    auto pen_forest = new QPushButton(this);
+    pen_forest->setText(tr("Forest"));
+    connect(pen_forest, &QPushButton::released, [=]{
+        editor->setBuildingPen(BuildingType::forest);
+    });
+    layout->addWidget(pen_forest, 3, 2);
+
+    auto pen_stone1 = new QPushButton(this);
+    pen_stone1->setText("Stone1");
+    connect(pen_stone1, &QPushButton::released, [=]{
+        editor->setBuildingPen(BuildingType::stones1);
+    });
+    layout->addWidget(pen_stone1, 3, 3);
+
+    auto pen_stone2 = new QPushButton(this);
+    pen_stone2->setText("Stone2");
+    connect(pen_stone2, &QPushButton::released, [=]{
+        editor->setBuildingPen(BuildingType::stones2);
+    });
+    layout->addWidget(pen_stone2, 4, 1);
+
+    auto pen_stone3 = new QPushButton(this);
+    pen_stone3->setText("Stone3");
+    connect(pen_stone3, &QPushButton::released, [=]{
+        editor->setBuildingPen(BuildingType::stones3);
+    });
+    layout->addWidget(pen_stone3, 4, 2);
+
     // set layout
     setLayout(layout);
 }

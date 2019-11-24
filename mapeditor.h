@@ -66,6 +66,9 @@ public:
     QColor color_tile_lava;
     QColor color_tile_rock;
 
+    QColor color_building_tree;
+    QColor color_building_stone;
+
     void setTilePen(TileType tileType);
     void setBuildingPen(BuildingType buildingType);
     void setItemPen(ItemType itemType);
