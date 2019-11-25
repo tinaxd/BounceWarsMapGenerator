@@ -50,8 +50,10 @@ struct MapTile
     TileType tile;
     BuildingType building;
     ItemType item;
+    int height; // 0: noset, 1: -0.15, 2: -0.3
 
-    MapTile(TileType tile, BuildingType building, ItemType item) : tile(tile), building(building), item(item) {}
+    MapTile(TileType tile, BuildingType building, ItemType item, int height) : tile(tile), building(building), item(item), height(height) {}
+    MapTile(TileType tile, BuildingType building, ItemType item) : MapTile(tile, building, item, 0) {}
     MapTile(TileType tile, BuildingType building) : MapTile(tile, building, ItemType::nothing) {}
     MapTile(TileType tile) : MapTile(tile, BuildingType::nothing) {}
 };
