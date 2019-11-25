@@ -1,5 +1,7 @@
 Map generator for BounceWars
 ----------------------------
+image:https://api.codacy.com/project/badge/Grade/1ae0295a52af4f66914da2a8edc5a59c["Codacy code quality", link="https://www.codacy.com/manual/tinaxd/BounceWarsMapGenerator?utm_source=github.com&utm_medium=referral&utm_content=tinaxd/BounceWarsMapGenerator&utm_campaign=Badge_Grade"]
+
 GUI map designer for BounceWars.
 
 Libraries
